@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Assembly-CSharp" HintPath="$(SCP_SL_MANAGED)\Assembly-CSharp.dll" Private="false" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(SCP_SL_MANAGED)\Assembly-CSharp-firstpass.dll" Private="false" />
     <Reference Include="LabApi" HintPath="$(SCP_SL_MANAGED)\LabApi.dll" Private="false" />

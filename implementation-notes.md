@@ -23,6 +23,8 @@ No Harmony patches, polling, per-frame work, direct health rewrites, or effect r
 
 Build verification should be run with `dotnet build CokeNoDmg.csproj`.
 
+Live dummy testing on port `7777` passed on 2026-06-10. The boundary checks verified that SCP-207 and Poisoned damage were canceled, while adjacent status/SCP damage and cola/pink/grenade explosions were not canceled. This server's current native dummy state can reduce allowed damage probes to `0` health damage, so the live check treated `PlayerEvents.Hurting`'s post-plugin `eventAllowed` value as the source of truth for cancellation boundaries.
+
 Live verification needs a visible SCP:SL test server:
 
 1. Deploy `CokeNoDmg.dll` to `%APPDATA%\SCP Secret Laboratory\LabAPI\plugins\8888`.
