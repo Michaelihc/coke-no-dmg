@@ -1,6 +1,7 @@
 using System;
 using CokeNoDmg.Config;
 using CokeNoDmg.Services;
+using HarmonyLib;
 using LabApi.Features;
 using LabApi.Features.Console;
 using LabApi.Loader.Features.Plugins;
@@ -9,6 +10,7 @@ namespace CokeNoDmg;
 
 public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
 {
+    private Harmony? _harmony;
     private DamageBlockService? _damageBlockService;
 
     public override string Name => "CokeNoDmg";
@@ -17,17 +19,22 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
 
     public override string Author => "Codex";
 
-    public override Version Version => new(0, 1, 0);
+    public override Version Version => new(0, 1, 1);
 
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
     public override void Enable()
     {
+        Instance = this;
+
         if (!Config.IsEnabled)
         {
             Logger.Info(Text("CokeNoDmg is disabled by config.", "CokeNoDmg 已被配置禁用。"));
             return;
         }
+
+        _harmony = new Harmony("com.codex.scpsl.cokenodmg");
+        _harmony.PatchAll(typeof(CokeNoDmgPlugin).Assembly);
 
         _damageBlockService = new DamageBlockService(Config);
         _damageBlockService.Enable();
@@ -39,9 +46,18 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
     {
         _damageBlockService?.Disable();
         _damageBlockService = null;
+        if (_harmony is not null)
+        {
+            _harmony.UnpatchAll(_harmony.Id);
+        }
+
+        _harmony = null;
+        Instance = null;
 
         Logger.Info(Text("CokeNoDmg disabled.", "CokeNoDmg 已禁用。"));
     }
+
+    internal static CokeNoDmgPlugin? Instance { get; private set; }
 
     private string Text(string english, string chinese)
     {

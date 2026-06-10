@@ -17,7 +17,9 @@ Evidence:
 
 ## Conflict Avoidance
 
-No Harmony patches, polling, per-frame work, direct health rewrites, or effect removals are used. The plugin cancels only `UniversalDamageHandler` instances whose translation ID is `DeathTranslations.Scp207.Id` or `DeathTranslations.Poisoned.Id`.
+For damage removal, no Harmony patches, polling, per-frame work, direct health rewrites, or effect removals are used. The plugin cancels only `UniversalDamageHandler` instances whose translation ID is `DeathTranslations.Scp207.Id` or `DeathTranslations.Poisoned.Id`.
+
+`disable_poison_pulse_display` is the only Harmony-backed feature because LabAPI does not expose an event around `PlayerEffectsController.ServerSendPulse<T>()`. The patch is a narrow prefix on `ServerSendPulse<T>` and returns `false` only for `T == Poisoned` when the option is explicitly enabled. The default is `false`, so vanilla poison pulse display is preserved unless configured otherwise.
 
 ## Testing Notes
 
