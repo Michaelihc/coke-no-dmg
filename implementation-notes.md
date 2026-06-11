@@ -19,7 +19,7 @@ Evidence:
 
 For damage removal, no Harmony patches, polling, per-frame work, direct health rewrites, or effect removals are used. The plugin cancels only `UniversalDamageHandler` instances whose translation ID is `DeathTranslations.Scp207.Id` or `DeathTranslations.Poisoned.Id`.
 
-`disable_poison_pulse_display` is the only Harmony-backed feature because LabAPI does not expose an event around `PlayerEffectsController.ServerSendPulse<T>()`. The patch is a narrow prefix on `ServerSendPulse<T>` and returns `false` only for `T == Poisoned` when the option is explicitly enabled. The default is `false`, so vanilla poison pulse display is preserved unless configured otherwise.
+`disable_poison_pulse_display` is the only Harmony-backed feature because LabAPI does not expose an event around poison pulse sends. Harmony cannot patch the open generic `PlayerEffectsController.ServerSendPulse<T>()` method safely in this environment, so the plugin patches the non-generic private `TargetRpcReceivePulse` send method and suppresses only pulses whose resolved effect index is `Poisoned`. Patch setup is wrapped so damage blocking still enables if pulse suppression fails.
 
 ## Testing Notes
 
@@ -32,4 +32,4 @@ Live verification needs a visible SCP:SL test server:
 1. Deploy `CokeNoDmg.dll` to `%APPDATA%\SCP Secret Laboratory\LabAPI\plugins\8888`.
 2. Restart the visible local test server on port `8888`.
 3. Give a test player SCP-207 and confirm movement/stamina behavior remains active while health no longer decreases from SCP-207 ticks.
-4. Apply Poisoned and confirm the poison pulse/effect remains active while health no longer decreases from poison ticks.
+4. Apply Poisoned and confirm health no longer decreases from poison ticks; with the default config, the poison pulse/vignette display should also be suppressed.

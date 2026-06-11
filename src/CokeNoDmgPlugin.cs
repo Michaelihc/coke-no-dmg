@@ -19,7 +19,7 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
 
     public override string Author => "Codex";
 
-    public override Version Version => new(0, 1, 1);
+    public override Version Version => new(0, 1, 2);
 
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
@@ -33,8 +33,10 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
             return;
         }
 
-        _harmony = new Harmony("com.codex.scpsl.cokenodmg");
-        _harmony.PatchAll(typeof(CokeNoDmgPlugin).Assembly);
+        if (Config.DisablePoisonPulseDisplay)
+        {
+            TryEnablePoisonPulsePatch();
+        }
 
         _damageBlockService = new DamageBlockService(Config);
         _damageBlockService.Enable();
@@ -58,6 +60,22 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
     }
 
     internal static CokeNoDmgPlugin? Instance { get; private set; }
+
+    private void TryEnablePoisonPulsePatch()
+    {
+        try
+        {
+            _harmony = new Harmony("com.codex.scpsl.cokenodmg");
+            _harmony.PatchAll(typeof(CokeNoDmgPlugin).Assembly);
+        }
+        catch (Exception ex)
+        {
+            _harmony = null;
+            Logger.Error(Text(
+                $"CokeNoDmg could not enable poison pulse suppression; damage blocking will still run. {ex.GetType().Name}: {ex.Message}",
+                $"CokeNoDmg 无法启用中毒脉冲隐藏；扣血拦截仍会继续运行。{ex.GetType().Name}: {ex.Message}"));
+        }
+    }
 
     private string Text(string english, string chinese)
     {

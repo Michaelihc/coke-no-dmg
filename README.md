@@ -27,7 +27,7 @@ CokeNoDmg 是一个极简 LabAPI 插件，用来取消 SCP-207 和中毒状态�
 - `language`: `""` 或 `"cn"` 使用中文日志，`"en"` 使用英文日志。
 - `block_scp207_damage`: 是否取消 SCP-207 扣血。
 - `block_poison_damage`: 是否取消中毒扣血。
-- `disable_poison_pulse_display`: 是否隐藏中毒脉冲/视觉提示。默认 `false`，保留原版显示。
+- `disable_poison_pulse_display`: 是否隐藏中毒脉冲/视觉提示。默认 `true`。
 
 ### 命令
 
@@ -46,9 +46,9 @@ It only intercepts two vanilla damage sources in the player hurting event:
 - SCP-207 tick damage
 - Poisoned status tick damage
 
-It does not remove the SCP-207 or Poisoned effects themselves, and it does not change SCP-207 movement, stamina behavior, or poison pulse display by default. This keeps the conflict surface small with plugins that modify effects, items, or HUD behavior.
+It does not remove the SCP-207 or Poisoned effects themselves, and it does not change SCP-207 movement or stamina behavior. Poison pulse display is suppressed by default.
 
-If needed, `disable_poison_pulse_display` can suppress the Poisoned pulse/vignette display. It is off by default.
+Set `disable_poison_pulse_display: false` if you want to keep the vanilla Poisoned pulse/vignette display.
 
 ### Config
 
@@ -64,7 +64,7 @@ Available settings:
 - `language`: `""` or `"cn"` uses Chinese logs, `"en"` uses English logs.
 - `block_scp207_damage`: Cancels SCP-207 damage.
 - `block_poison_damage`: Cancels poison damage.
-- `disable_poison_pulse_display`: Hides the Poisoned pulse/vignette display. Default is `false`, preserving vanilla visuals.
+- `disable_poison_pulse_display`: Hides the Poisoned pulse/vignette display. Default is `true`.
 
 ### Commands
 

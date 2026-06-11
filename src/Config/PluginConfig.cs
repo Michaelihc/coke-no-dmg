@@ -15,6 +15,6 @@ public sealed class PluginConfig
     [Description("Cancels health damage caused by the Poisoned status effect.")]
     public bool BlockPoisonDamage { get; set; } = true;
 
-    [Description("Suppresses the Poisoned client pulse/vignette display. Disabled by default to preserve vanilla visuals.")]
-    public bool DisablePoisonPulseDisplay { get; set; } = false;
+    [Description("Suppresses the Poisoned client pulse/vignette display.")]
+    public bool DisablePoisonPulseDisplay { get; set; } = true;
 }
