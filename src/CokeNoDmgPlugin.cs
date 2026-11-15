@@ -33,9 +33,11 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
             return;
         }
 
-        if (Config.DisablePoisonPulseDisplay)
+        // Harmony backs both the poison-pulse suppression and the SCP-500 rework; enable it if either
+        // feature is on. Each patch is internally gated by its own config flag, so PatchAll is safe.
+        if (Config.DisablePoisonPulseDisplay || Config.Scp500FullHealNoPurge)
         {
-            TryEnablePoisonPulsePatch();
+            TryEnableHarmonyPatches();
         }
 
         _damageBlockService = new DamageBlockService(Config);
@@ -61,7 +63,7 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
 
     internal static CokeNoDmgPlugin? Instance { get; private set; }
 
-    private void TryEnablePoisonPulsePatch()
+    private void TryEnableHarmonyPatches()
     {
         try
         {
@@ -72,8 +74,8 @@ public sealed class CokeNoDmgPlugin : Plugin<PluginConfig>
         {
             _harmony = null;
             Logger.Error(Text(
-                $"CokeNoDmg could not enable poison pulse suppression; damage blocking will still run. {ex.GetType().Name}: {ex.Message}",
-                $"CokeNoDmg 无法启用中毒脉冲隐藏；扣血拦截仍会继续运行。{ex.GetType().Name}: {ex.Message}"));
+                $"CokeNoDmg could not enable its Harmony patches (poison pulse suppression / SCP-500 rework); damage blocking will still run. {ex.GetType().Name}: {ex.Message}",
+                $"CokeNoDmg 无法启用 Harmony 补丁（中毒脉冲隐藏 / SCP-500 改造）；扣血拦截仍会继续运行。{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
